@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="main.js"></script>
+  <title>Web Synth Engine</title>
+</head>
+<body>
+
+  <h1>Web Synth Engine</h1>
+    <p>This is a game synth engine with four voices, inspired by the sounds of my childhood computers and video games. 
+  I created it to explore the Web Audio API and experiment with its possibilities.
+      The voices are:</p>
+    <ul>
+      <li>1 - Pulse wave with pulse width adjustment</li>
+      <li>2 - Pulse wave with pulse width adjustment</li>
+      <li>3 - Triangle wave</li>
+      <li>4 - Noise with adjustable clock/quality</li>
+    </ul>
+
+  <p>All voices respond to MIDI note number and the following settings:</p>
+    <ul>
+      <li>Attack (MIDI CC 73), Decay (MIDI CC 75), and Release (MIDI CC 72) — all voices</li>
+      <li>Vibrato rate (MIDI CC 76) and Vibrato depth (MIDI CC 77) — voices 1 to 3</li>
+      <li>Pulse width (MIDI CC 71) — voices 1 and 2</li>
+    </ul>
+
+  <h2>Demo</h2>
+    <p>0.mid demonstrates:</p>
+    <ul>
+      <li>Decay (and Release at the end) on voice 1 (the blippety blipp)</li>
+      <li>Pulse width modulation (and Release at the end) on voice 2 (octave bass)</li>
+      <li>Attack, Release, Vibrato depth, and Vibrato rate on voice 3 (melody)</li>
+      <li>Decay and Relase on voice 4 (noise drums)</li>
+    </ul>
+    <p>1.mid and 2.mid are... well-known, old, nostalgic game music.</p>
+    
+    <div class="controls">
+      <label for="midiSelect">Choose MIDI file:</label>
+      <select id="midiSelect">
+        <option value="0.mid">0.mid (default)</option>
+        <option value="1.mid">1.mid</option>
+        <option value="2.mid">2.mid</option>
+      </select>
+
+      <button id="startBtn">Start Audio & Play MIDI</button>
+      <small>(Selecting a new song stops playback)</small>
+    </div>
+
+  <h2>MIDI CC Mapping Details</h2>
+    <ul>
+      <li>
+        <strong>CC 73 – Attack:</strong><br>
+        MIDI value 0 = instant (0 seconds)<br>
+        MIDI values 1–127 = exponential mapping from <strong>0.01 to 2.0 seconds</strong>
+      </li>
+
+      <li>
+        <strong>CC 75 – Decay:</strong><br>
+        MIDI value 0 = no decay (sustain until note off)<br>
+        MIDI values 1–127 = exponential mapping from <strong>0.001 to 1.0 seconds</strong>
+      </li>
+
+      <li>
+        <strong>CC 72 – Release:</strong><br>
+        MIDI values 0–127 = exponential mapping from <strong>0.01 to 2.0 seconds</strong>
+      </li>
+
+      <li>
+        <strong>CC 71 – Pulse Width (Voices 1 & 2 only):</strong><br>
+        MIDI value 0 = <strong>0.5</strong> (square wave)<br>
+        MIDI value 127 = <strong>0.02</strong> (very narrow pulse)<br>
+        Linear mapping between these values
+      </li>
+
+      <li>
+        <strong>CC 76 – Vibrato Rate (Voices 1–3):</strong><br>
+        MIDI values 0–127 = linear mapping from <strong>0.1 Hz to 20 Hz</strong>
+      </li>
+
+      <li>
+        <strong>CC 77 – Vibrato Depth (Voices 1–3):</strong><br>
+        MIDI value 0 = <strong>0 cents</strong> (no vibrato)<br>
+        MIDI value 127 = <strong>1200 cents</strong> (±1 octave)<br>
+        Linear mapping across the range
+      </li>
+    </ul>
+
+</body>
+</html>

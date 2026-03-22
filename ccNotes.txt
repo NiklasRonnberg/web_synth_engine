@@ -1,0 +1,16 @@
+MIDI CC messages
+===============
+https://midi.org/midi-1-0-control-change-messages
+===============
+
+PWM control for Voice 1 and 2
+71	01000111	47	Sound Controller 2 (default: Timbre/Harmonic Intens.)	0-127	LSB
+
+ADR controls
+72	01001000	48	Sound Controller 3 (default: Release Time)	0-127	LSB
+73	01001001	49	Sound Controller 4 (default: Attack Time)	0-127	LSB
+75	01001011	4B	Sound Controller 6 (default: Decay Time – see MMA RP-021)	0-127	LSB
+
+Vibrato controls
+76	01001100	4C	Sound Controller 7 (default: Vibrato Rate – see MMA RP-021)	0-127	LSB
+77	01001101	4D	Sound Controller 8 (default: Vibrato Depth – see MMA RP-021)	0-127	LSB

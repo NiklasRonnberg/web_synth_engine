@@ -1,0 +1,97 @@
+/* ----- Base ----- */
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f9f9;
+  color: #222;
+  margin: 0;
+  padding: 2rem;
+  line-height: 1.6;
+}
+
+/* ----- Headers ----- */
+h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+h2 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 0.3rem;
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+/* ----- Controls (vertical stack) ----- */
+.controls {
+  display: flex;
+  flex-direction: column; /* vertical stack */
+  gap: 1rem;
+  margin-bottom: 2rem;
+  align-items: flex-start; /* natural size, left-aligned */
+}
+
+select, button {
+  padding: 0.65rem 1rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+  display: inline-block; /* natural width */
+}
+
+button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  font-weight: 600;
+}
+
+button:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+button:disabled {
+  background-color: #aaa;
+  cursor: not-allowed;
+}
+
+/* ----- Paragraphs and lists ----- */
+p, ul {
+  margin-bottom: 1rem;
+}
+
+ul {
+  margin-left: 1.5rem;
+}
+
+strong {
+  color: #007bff;
+  font-weight: 600;
+}
+
+/* ----- Sections ----- */
+section {
+  padding: 1rem 0;
+}
+
+/* ----- Responsive ----- */
+@media (max-width: 500px) {
+  h1 {
+    font-size: 1.6rem;
+  }
+
+  h2 {
+    font-size: 1.1rem;
+  }
+
+  select, button {
+    font-size: 0.95rem;
+  }
+}
