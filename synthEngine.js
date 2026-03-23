@@ -107,6 +107,16 @@ function ccToVibratoDepth(value) {
 }
 
 // --------------------------------------
+// CC to portamento
+// --------------------------------------
+function ccToPortamento(value){
+  const min = 0.0;
+  const max = 1.5;
+  const norm = value / 127;
+  return min + Math.pow(norm, 2) * (max - min);
+}
+
+// --------------------------------------
 // Square Voice
 // --------------------------------------
 class SquareVoice {
@@ -129,6 +139,9 @@ class SquareVoice {
     this.lfo = null;
     this.lfoGain = null;
 
+    this.portamento = 0;
+    this.lastFreq = null; 
+
     this.output.connect(masterGain);
   }
 
@@ -143,7 +156,7 @@ class SquareVoice {
     return this.ctx.createPeriodicWave(real, imag);
   }
 
-  setCC({ attack, decay, release, pulseWidth, vibratoRate, vibratoDepth }) {
+  setCC({ attack, decay, release, pulseWidth, vibratoRate, vibratoDepth, portamento }) {
     if (attack !== undefined) this.attack = attack;
     if (decay !== undefined) this.decay = decay;
     if (release !== undefined) this.release = release;
@@ -168,53 +181,63 @@ class SquareVoice {
         this.lfoGain.gain.setValueAtTime(vibratoDepth, this.ctx.currentTime);
       }
     }
+
+    if (portamento !== undefined) this.portamento = portamento;
   }
 
   noteOn(freq) {
     const t = this.ctx.currentTime;
-    this.active = true;
 
-    if (this.osc) try { this.osc.stop(t); } catch {}
+    const shouldRetrigger = this.portamento === 0;
 
-    this.osc = this.ctx.createOscillator();
-    this.osc.setPeriodicWave(this.createPulseWave(this.pulseWidth));
-    this.osc.frequency.setValueAtTime(freq, t);
+    // Recreate Osc if no portamento
+    if (shouldRetrigger) {
+      if (this.osc) {
+        try { this.osc.stop(t); } catch {}
+        this.osc = null;
+      }
+    }
 
-    // 🎛️ Vibrato LFO
-    this.lfo = this.ctx.createOscillator();
-    this.lfo.type = "sine";
+    // create if needed
+    if (!this.osc) {
+      this.osc = this.ctx.createOscillator();
+      this.osc.setPeriodicWave(this.createPulseWave(this.pulseWidth));
+      this.osc.connect(this.output);
+      this.osc.start(t);
+
+      // LFO (only once per osc)
+      this.lfo = this.ctx.createOscillator();
+      this.lfo.type = "sine";
+
+      this.lfoGain = this.ctx.createGain();
+      this.lfo.connect(this.lfoGain);
+      this.lfoGain.connect(this.osc.detune);
+
+      this.lfo.start(t);
+    }
+
+    // vibrato update
     this.lfo.frequency.setValueAtTime(this.vibratoRate, t);
-
-    this.lfoGain = this.ctx.createGain();
     this.lfoGain.gain.setValueAtTime(this.vibratoDepth, t);
 
-    // Connect LFO → detune (in cents)
-    this.lfo.connect(this.lfoGain);
-    this.lfoGain.connect(this.osc.detune);
+    // Portamento vs Retrigger
+    if (!shouldRetrigger && this.lastFreq !== null) {
+      this.osc.frequency.setValueAtTime(this.lastFreq, t);
+      this.osc.frequency.linearRampToValueAtTime(freq, t + this.portamento);
+    } else {
+      this.osc.frequency.setValueAtTime(freq, t);
+    }
 
-    this.osc.connect(this.output);
+    this.lastFreq = freq;
 
-    this.osc.start(t);
-    this.lfo.start(t);
-
-    this.releaseFn = applyADREnvelope(this.output, this.attack, this.decay, this.release, 1);
+    this.releaseFn = applyADREnvelope(
+      this.output,
+      this.attack,
+      this.decay,
+      this.release,
+      1
+    );
   }
-
-  /*noteOn(freq) {
-    const t = this.ctx.currentTime;
-    this.active = true;
-
-    if (this.osc) try { this.osc.stop(t); } catch {}
-
-    this.osc = this.ctx.createOscillator();
-    this.osc.setPeriodicWave(this.createPulseWave(this.pulseWidth));
-    this.osc.frequency.setValueAtTime(freq, t);
-
-    this.osc.connect(this.output);
-    this.osc.start(t);
-
-    this.releaseFn = applyADREnvelope(this.output, this.attack, this.decay, this.release, 1);
-  }*/
 
   noteOff() {
     const t = this.ctx.currentTime;
@@ -222,10 +245,10 @@ class SquareVoice {
 
     if (this.decay === 0 && this.releaseFn) this.releaseFn(this.release);
 
-    if (this.osc) {
+    /*if (this.osc) {
       const stopTime = t + (this.decay === 0 ? this.release : 0.05);
       this.osc.stop(stopTime);
-    }
+    }*/
   }
 }
 
@@ -251,10 +274,13 @@ class TriangleVoice {
     this.lfo = null;
     this.lfoGain = null;
 
+    this.portamento = 0;
+    this.lastFreq = null;
+
     this.output.connect(masterGain);
   }
 
-  setCC({ attack, decay, release, vibratoRate, vibratoDepth }) {
+  setCC({ attack, decay, release, vibratoRate, vibratoDepth, portamento }) {
     if (attack !== undefined) this.attack = attack;
     if (decay !== undefined) this.decay = decay;
     if (release !== undefined) this.release = release;
@@ -272,53 +298,69 @@ class TriangleVoice {
         this.lfoGain.gain.setValueAtTime(vibratoDepth, this.ctx.currentTime);
       }
     }
+
+    if (portamento !== undefined) this.portamento = portamento;
   }
 
-   noteOn(freq) {
+  noteOn(freq) {
     const t = this.ctx.currentTime;
-    this.active = true;
 
-    if (this.osc) try { this.osc.stop(t); } catch {}
+    const shouldRetrigger = this.portamento === 0;
 
-    this.osc = this.ctx.createOscillator();
-    this.osc.type = "triangle";
-    this.osc.frequency.setValueAtTime(freq, t);
+    // Recreate Osc if no portamento
+    if (shouldRetrigger) {
+      if (this.osc) {
+        try { this.osc.stop(t); } catch {}
+        this.osc = null;
+      }
+    }
 
-    // 🎛️ Vibrato LFO
-    this.lfo = this.ctx.createOscillator();
-    this.lfo.type = "sine";
+    if (!this.osc) {
+      this.osc = this.ctx.createOscillator();
+      this.osc.type = "triangle";
+      this.osc.connect(this.output);
+      this.osc.start(t);
+
+      this.lfo = this.ctx.createOscillator();
+      this.lfo.type = "sine";
+
+      this.lfoGain = this.ctx.createGain();
+      this.lfo.connect(this.lfoGain);
+      this.lfoGain.connect(this.osc.detune);
+
+      this.lfo.start(t);
+    }
+
     this.lfo.frequency.setValueAtTime(this.vibratoRate, t);
-
-    this.lfoGain = this.ctx.createGain();
     this.lfoGain.gain.setValueAtTime(this.vibratoDepth, t);
 
-    // Connect LFO → detune (in cents)
-    this.lfo.connect(this.lfoGain);
-    this.lfoGain.connect(this.osc.detune);
+    if (this.lastFreq === null) {
+      this.osc.frequency.setValueAtTime(freq, t);
+    } else if (this.portamento > 0) {
+      this.osc.frequency.setValueAtTime(this.lastFreq, t);
+      this.osc.frequency.linearRampToValueAtTime(freq, t + this.portamento);
+    } else {
+      this.osc.frequency.setValueAtTime(freq, t);
+    }
 
-    this.osc.connect(this.output);
+    // Portamento vs Retrigger
+    if (!shouldRetrigger && this.lastFreq !== null) {
+      this.osc.frequency.setValueAtTime(this.lastFreq, t);
+      this.osc.frequency.linearRampToValueAtTime(freq, t + this.portamento);
+    } else {
+      this.osc.frequency.setValueAtTime(freq, t);
+    }
 
-    this.osc.start(t);
-    this.lfo.start(t);
+    this.lastFreq = freq;
 
-    this.releaseFn = applyADREnvelope(this.output, this.attack, this.decay, this.release, 1);
+    this.releaseFn = applyADREnvelope(
+      this.output,
+      this.attack,
+      this.decay,
+      this.release,
+      1
+    );
   }
-
-  /*noteOn(freq) {
-    const t = this.ctx.currentTime;
-    this.active = true;
-
-    if (this.osc) try { this.osc.stop(t); } catch {}
-
-    this.osc = this.ctx.createOscillator();
-    this.osc.type = "triangle";
-    this.osc.frequency.setValueAtTime(freq, t);
-
-    this.osc.connect(this.output);
-    this.osc.start(t);
-
-    this.releaseFn = applyADREnvelope(this.output, this.attack, this.decay, this.release, 1);
-  }*/
 
   noteOff() {
     const t = this.ctx.currentTime;
@@ -326,10 +368,10 @@ class TriangleVoice {
 
     if (this.decay === 0 && this.releaseFn) this.releaseFn(this.release);
 
-    if (this.osc) {
+    /*if (this.osc) {
       const stopTime = t + (this.decay === 0 ? this.release : 0.05);
       this.osc.stop(stopTime);
-    }
+    }*/
   }
 }
 
@@ -453,6 +495,7 @@ export function handleMidiEvent(event) {
     if (controller === 71) ccValues.pulseWidth = ccToPulseWidth(value); // pulse width
     if (controller === 76) ccValues.vibratoRate = ccToVibratoRate(value); // vibrato rate
     if (controller === 77) ccValues.vibratoDepth = ccToVibratoDepth(value); // vibrato depth
+    if (controller === 5) ccValues.portamento = ccToPortamento(value); // portamento
 
     if (typeof voice.setCC === "function") {
       voice.setCC(ccValues);

@@ -47,18 +47,20 @@ select, button {
 }
 
 button {
-  background-color: #007bff;
+  background-color: #707070;
   color: #fff;
-  border: none;
+  border: 1px solid #000;
   font-weight: 600;
 }
 
 button:hover:not(:disabled) {
-  background-color: #0056b3;
+  background-color: #525252;
+  color: #c2c2c2;
 }
 
 button:disabled {
   background-color: #aaa;
+  color: #c2c2c2;
   cursor: not-allowed;
 }
 
@@ -72,7 +74,7 @@ ul {
 }
 
 strong {
-  color: #007bff;
+  color: #000;
   font-weight: 600;
 }
 
