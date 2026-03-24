@@ -65,19 +65,19 @@ function applyADREnvelope(gainNode, attack, decay, release, peak = 1) {
 // CC to ADR
 // --------------------------------------
 function ccToAttack(value) {
-  const min = 0.01, max = 2.0;
+  const min = 0.01, max = 4.0;
   const norm = value / 127;
   return min * Math.pow(max / min, norm);
 }
 
 function ccToDecay(value) {
-  const min = 0.001, max = 1.0;
+  const min = 0.01, max = 4.0;
   const norm = value / 127;
   return min * Math.pow(max / min, norm);
 }
 
 function ccToRelease(value) {
-  const min = 0.01, max = 2.0;
+  const min = 0.01, max = 4.0;
   const norm = value / 127;
   return min * Math.pow(max / min, norm);
 }
@@ -102,7 +102,7 @@ function ccToVibratoRate(value) {
 
 function ccToVibratoDepth(value) {
   const min = 0;
-  const max = 1200;
+  const max = 600;
   return min + (value / 127) * (max - min);
 }
 
@@ -111,7 +111,7 @@ function ccToVibratoDepth(value) {
 // --------------------------------------
 function ccToPortamento(value){
   const min = 0.0;
-  const max = 1.5;
+  const max = 2;
   const norm = value / 127;
   return min + Math.pow(norm, 2) * (max - min);
 }
