@@ -13,10 +13,10 @@
   I created it to explore the Web Audio API and experiment with its possibilities.
       The voices are:</p>
     <ul>
-      <li>1 - Pulse wave with pulse width adjustment</li>
-      <li>2 - Pulse wave with pulse width adjustment</li>
-      <li>3 - Triangle wave</li>
-      <li>4 - Noise with adjustable clock/quality</li>
+      <li>1 - Pulse wave with pulse width adjustment (MIDI channel 1)</li>
+      <li>2 - Pulse wave with pulse width adjustment (MIDI channel 2)</li>
+      <li>3 - Triangle wave (MIDI channel 3)</li>
+      <li>4 - Noise with adjustable clock/quality (MIDI channel 4)</li>
     </ul>
 
   <p>All voices respond to MIDI note number and the following settings:</p>
@@ -37,7 +37,7 @@
     </ul>
     <p>1.mid demonstrates:</p>
     <ul>
-      <li>Decay, Attack, and Release in different amount on all voices</li>
+      <li>Decay, Attack, and Release in different amount on all voices (voice 1 meldoy, voice 2 slower tones, voice 3 bass, voice 4 noise drums)</li>
       <li>Pulse width modulation on both voice 1 and voice 2</li>
       <li>Portamento on voice 2</li>
       <li>Vibrato on voice 1</li>
@@ -51,6 +51,7 @@
         <option value="1.mid">1.mid</option>
         <option value="2.mid">2.mid</option>
         <option value="3.mid">3.mid</option>
+        <option value="4.mid">4.mid</option>
       </select>
 
       <button id="startBtn">Start Audio & Play MIDI</button>
