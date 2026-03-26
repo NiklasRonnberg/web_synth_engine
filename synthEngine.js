@@ -2,6 +2,9 @@ let audioCtx;
 let masterGain;
 let voices = [];
 
+let pitchBend = new Array(16).fill(0); // per MIDI channel (-1 to +1)
+const PITCH_BEND_RANGE = 2; // semitones (standard)
+
 export async function initiateAudio() {
   audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
@@ -134,13 +137,16 @@ class SquareVoice {
     this.releaseFn = null;
     this.active = false;
 
-    this.vibratoRate = 5;      // Hz (default)
-    this.vibratoDepth = 0;     // in cents
+    this.vibratoRate = 5;
+    this.vibratoDepth = 0;
     this.lfo = null;
     this.lfoGain = null;
 
     this.portamento = 0;
-    this.lastFreq = null; 
+    this.lastFreq = null;
+
+    this.pitchBend = 0;
+    this.bendRange = 2;
 
     this.output.connect(masterGain);
   }
@@ -154,6 +160,17 @@ class SquareVoice {
       imag[i] = (2 / (i * Math.PI)) * Math.sin(i * Math.PI * pulseWidth);
     }
     return this.ctx.createPeriodicWave(real, imag);
+  }
+
+  setPitchBend(value) {
+    this.pitchBend = value;
+
+    const cents = value * this.bendRange * 100;
+    const t = this.ctx.currentTime;
+
+    if (this.osc) {
+      this.osc.detune.setValueAtTime(cents, t);
+    }
   }
 
   setCC({ attack, decay, release, pulseWidth, vibratoRate, vibratoDepth, portamento }) {
@@ -216,6 +233,11 @@ class SquareVoice {
       this.lfo.start(t);
     }
 
+    // pitch bend
+    const cents = this.pitchBend * this.bendRange * 100;
+    //this.osc.detune.setValueAtTime(cents, t);
+    this.osc.detune.linearRampToValueAtTime(cents, t + 0.01);
+
     // vibrato update
     this.lfo.frequency.setValueAtTime(this.vibratoRate, t);
     this.lfoGain.gain.setValueAtTime(this.vibratoDepth, t);
@@ -244,11 +266,6 @@ class SquareVoice {
     this.active = false;
 
     if (this.decay === 0 && this.releaseFn) this.releaseFn(this.release);
-
-    /*if (this.osc) {
-      const stopTime = t + (this.decay === 0 ? this.release : 0.05);
-      this.osc.stop(stopTime);
-    }*/
   }
 }
 
@@ -269,15 +286,29 @@ class TriangleVoice {
     this.releaseFn = null;
     this.active = false;
 
-    this.vibratoRate = 5;      // Hz (default)
-    this.vibratoDepth = 0;     // in cents
+    this.vibratoRate = 5;
+    this.vibratoDepth = 0;
     this.lfo = null;
     this.lfoGain = null;
 
     this.portamento = 0;
     this.lastFreq = null;
 
+    this.pitchBend = 0;
+    this.bendRange = 2;
+
     this.output.connect(masterGain);
+  }
+
+  setPitchBend(value) {
+    this.pitchBend = value;
+
+    const cents = value * this.bendRange * 100;
+    const t = this.ctx.currentTime;
+
+    if (this.osc) {
+      this.osc.detune.setValueAtTime(cents, t);
+    }
   }
 
   setCC({ attack, decay, release, vibratoRate, vibratoDepth, portamento }) {
@@ -331,17 +362,13 @@ class TriangleVoice {
       this.lfo.start(t);
     }
 
+    // pitch bend
+    const cents = this.pitchBend * this.bendRange * 100;
+    this.osc.detune.linearRampToValueAtTime(cents, t + 0.01);
+
+    // vibrato update
     this.lfo.frequency.setValueAtTime(this.vibratoRate, t);
     this.lfoGain.gain.setValueAtTime(this.vibratoDepth, t);
-
-    if (this.lastFreq === null) {
-      this.osc.frequency.setValueAtTime(freq, t);
-    } else if (this.portamento > 0) {
-      this.osc.frequency.setValueAtTime(this.lastFreq, t);
-      this.osc.frequency.linearRampToValueAtTime(freq, t + this.portamento);
-    } else {
-      this.osc.frequency.setValueAtTime(freq, t);
-    }
 
     // Portamento vs Retrigger
     if (!shouldRetrigger && this.lastFreq !== null) {
@@ -368,10 +395,6 @@ class TriangleVoice {
 
     if (this.decay === 0 && this.releaseFn) this.releaseFn(this.release);
 
-    /*if (this.osc) {
-      const stopTime = t + (this.decay === 0 ? this.release : 0.05);
-      this.osc.stop(stopTime);
-    }*/
   }
 }
 
@@ -390,6 +413,9 @@ class NoiseVoice {
     this.decay = 0;
     this.release = 0.01;
 
+    this.pitchBend = 0;
+    this.bendRange = 2;
+
     this.source = null;
     this.node = null;
     this.useWorklet = !!ctx.audioWorklet;
@@ -405,6 +431,10 @@ class NoiseVoice {
     return buffer;
   }
 
+  setPitchBend(value) {
+    this.pitchBend = value;
+  }
+
   setCC({ attack, decay, release }) {
     if (attack !== undefined) this.attack = attack;
     if (decay !== undefined) this.decay = decay;
@@ -413,7 +443,8 @@ class NoiseVoice {
 
   async noteOn(freq) {
     const t = this.ctx.currentTime;
-    const scaledFreq = Math.min(15000, Math.max(100, freq * 16));
+    const bendFactor = Math.pow(2, (this.pitchBend * this.bendRange) / 12);
+    const scaledFreq = Math.min(20000, Math.max(1, freq * 8 * bendFactor));
 
     // --- Initialize source ---
     if (this.useWorklet) {
@@ -446,9 +477,9 @@ class NoiseVoice {
     this.output.gain.linearRampToValueAtTime(0.3, now + this.attack);
 
     if (this.decay > 0) {
-      // Attack → Decay
+      // Attack -> Decay
       this.output.gain.linearRampToValueAtTime(0, now + this.attack + this.decay);
-      this.releaseFn = null; // decay handles release automatically
+      this.releaseFn = null;
     } else {
       // Sustain until noteOff
       this.releaseFn = (releaseTime) => {
@@ -485,6 +516,16 @@ export function handleMidiEvent(event) {
   const { type, note, velocity, channel, controller, value } = event;
   const voice = voices[channel - 1];
   if (!voice) return;
+
+  if (type === "pitchBend") {
+    pitchBend[channel - 1] = event.normalized;
+
+    const voice = voices[channel - 1];
+    if (voice && typeof voice.setPitchBend === "function") {
+      voice.setPitchBend(event.normalized);
+    }
+    return;
+  }
 
   // Only changes here: call setCC on MIDI CC
   if (type === "cc") {

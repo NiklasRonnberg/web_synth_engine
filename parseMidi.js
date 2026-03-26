@@ -99,6 +99,23 @@ export function parseMidi(arrayBuffer) {
         continue;
       }
 
+      // Pitch Bend
+      if (eventType === 0xE0) {
+        const lsb = data.getUint8(offset++);
+        const msb = data.getUint8(offset++);
+        const value14 = (msb << 7) | lsb;
+        const normalized = (value14 - 8192) / 8192;
+
+        rawEvents.push({
+          type: "pitchBend",
+          value: value14,          // 0–16383
+          normalized,              // -1 to +1
+          channel,
+          ticks: currentTicks
+        });
+        continue;
+      }
+
       // Meta Events
       else if (statusByte === 0xff) {
         const metaType = data.getUint8(offset++);
