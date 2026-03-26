@@ -22,6 +22,7 @@
   <p>All voices respond to MIDI note number, Pitch Bend, and the following settings:</p>
     <ul>
       <li>Attack (MIDI CC 73), Decay (MIDI CC 75), and Release (MIDI CC 72) — all voices</li>
+      <li>Pitch bend range (MIDI CC 9) — all voices</li>
       <li>Portamento time (MIDI CC 5) — voices 1 to 3</li>
       <li>Vibrato rate (MIDI CC 76) and Vibrato depth (MIDI CC 77) — voices 1 to 3</li>
       <li>Pulse width (MIDI CC 71) — voices 1 and 2</li>
@@ -37,21 +38,29 @@
     </ul>
     <p>1.mid demonstrates:</p>
     <ul>
-      <li>Decay, Attack, and Release in different amount on all voices (voice 1 meldoy, voice 2 slower tones, voice 3 bass, voice 4 noise drums)</li>
+      <li>Decay, Attack, and Release in different amount on all voices (voice 1 melody, voice 2 slower tones, voice 3 bass, voice 4 noise drums)</li>
       <li>Pulse width modulation on both voice 1 and voice 2</li>
       <li>Portamento on voice 2</li>
       <li>Vibrato on voice 1</li>
     </ul>
-    <p>2.mid, 3.mid, and 4.mid are... well-known, old, nostalgic game music.</p>
+    <p>3.mid demonstrates:</p>
+    <ul>
+      <li>Pitch bend and Pitch bend range on voices 1 (with increasing pitch bend range), 2, and 4</li>
+      <li>Decay on voice 3</li>
+      <li>Relase on voices 1, 2, and 4</li>
+    </ul>
+
+    <p>10.mid, 11.mid, and 12.mid are... well-known, old, nostalgic game music.</p>
     
     <div class="controls">
       <label for="midiSelect">Choose MIDI file:</label>
       <select id="midiSelect">
-        <option value="0.mid">0.mid (default)</option>
+        <option value="0.mid">0.mid</option>
         <option value="1.mid">1.mid</option>
         <option value="2.mid">2.mid</option>
-        <option value="3.mid">3.mid</option>
-        <option value="4.mid">4.mid</option>
+        <option value="10.mid">10.mid</option>
+        <option value="11.mid">11.mid</option>
+        <option value="12.mid">12.mid</option>
       </select>
 
       <button id="startBtn">Start Audio & Play MIDI</button>
@@ -64,6 +73,13 @@
         <strong>CC 5 – Portamento Time Width (Voices 1-3):</strong><br>
         MIDI value 0 = no portamento<br>
         MIDI value 127 = long portamento (2 seconds)<br>
+        Linear mapping between these values
+      </li>
+
+      <li>
+        <strong>CC 9 – Pitch Bend Range (All voices):</strong><br>
+        MIDI value 0 = 2 semitones<br>
+        MIDI value 127 = 24 semitones (i.e., 2 octaves)<br>
         Linear mapping between these values
       </li>
 
