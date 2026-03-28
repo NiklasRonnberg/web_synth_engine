@@ -7,118 +7,169 @@
   <title>Web Synth Engine</title>
 </head>
 <body>
+  <div class="top-section">
+    <div class="top-header">
+      <h1>Web Synth Engine</h1>
+    </div>
+    <div class="top-content">
 
-  <h1>Web Synth Engine</h1>
-    <p>This is a game synth engine with four voices, inspired by the sounds of my childhood computers and video games. 
-  I created it to explore the Web Audio API and experiment with its possibilities.
-      The voices are:</p>
-    <ul>
-      <li>1 - Pulse wave with pulse width adjustment (MIDI channel 1)</li>
-      <li>2 - Pulse wave with pulse width adjustment (MIDI channel 2)</li>
-      <li>3 - Triangle wave (MIDI channel 3)</li>
-      <li>4 - Noise with adjustable clock/quality (MIDI channel 4)</li>
-    </ul>
+      <div class="top-left">
 
-  <p>All voices respond to MIDI note number, Pitch Bend, and the following settings:</p>
-    <ul>
-      <li>Attack (MIDI CC 73), Decay (MIDI CC 75), and Release (MIDI CC 72) — all voices</li>
-      <li>Pitch bend range (MIDI CC 9) — all voices</li>
-      <li>Portamento time (MIDI CC 5) — voices 1 to 3</li>
-      <li>Vibrato rate (MIDI CC 76) and Vibrato depth (MIDI CC 77) — voices 1 to 3</li>
-      <li>Pulse width (MIDI CC 71) — voices 1 and 2</li>
-    </ul>
+        <p>This is a game synth engine with four voices, inspired by the sounds of my childhood computers and video games. 
+        I created it to explore the Web Audio API and experiment with its possibilities.
+        The voices are:</p>
 
-  <h2>Demo</h2>
-    <p>0.mid demonstrates:</p>
-    <ul>
-      <li>Decay (and Release at the end) on voice 1 (the blippety blipp)</li>
-      <li>Pulse width modulation (and Release at the end) on voice 2 (octave bass)</li>
-      <li>Attack, Release, Vibrato depth, Vibrato rate, and Portamento on voice 3 (melody)</li>
-      <li>Decay and Relase on voice 4 (noise drums)</li>
-    </ul>
-    <p>1.mid demonstrates:</p>
-    <ul>
-      <li>Decay, Attack, and Release in different amount on all voices (voice 1 melody, voice 2 slower tones, voice 3 bass, voice 4 noise drums)</li>
-      <li>Pulse width modulation on both voice 1 and voice 2</li>
-      <li>Portamento on voice 2</li>
-      <li>Vibrato on voice 1</li>
-    </ul>
-    <p>3.mid demonstrates:</p>
-    <ul>
-      <li>Pitch bend and Pitch bend range on voices 1 (with increasing pitch bend range), 2, and 4</li>
-      <li>Decay on voice 3</li>
-      <li>Relase on voices 1, 2, and 4</li>
-    </ul>
+        <ul>
+          <li>1 - Pulse wave with pulse width adjustment (MIDI channel 1)</li>
+          <li>2 - Pulse wave with pulse width adjustment (MIDI channel 2)</li>
+          <li>3 - Triangle wave (MIDI channel 3)</li>
+          <li>4 - Noise with adjustable clock/quality (MIDI channel 4)</li>
+        </ul>
 
-    <p>10.mid, 11.mid, and 12.mid are... well-known, old, nostalgic game music.</p>
-    
-    <div class="controls">
-      <label for="midiSelect">Choose MIDI file:</label>
-      <select id="midiSelect">
-        <option value="0.mid">0.mid</option>
-        <option value="1.mid">1.mid</option>
-        <option value="2.mid">2.mid</option>
-        <option value="10.mid">10.mid</option>
-        <option value="11.mid">11.mid</option>
-        <option value="12.mid">12.mid</option>
-      </select>
+        <p>All voices respond to MIDI note number, Pitch Bend, and the following settings:</p>
 
-      <button id="startBtn">Start Audio & Play MIDI</button>
-      <small>(Selecting a new song stops playback)</small>
+        <ul>
+          <li>Attack (MIDI CC 73), Decay (MIDI CC 75), and Release (MIDI CC 72) — all voices</li>
+          <li>Detune (MIDI CC3) - voices 1 to 3</li>
+          <li>Pitch bend range (MIDI CC 9) — all voices</li>
+          <li>Portamento time (MIDI CC 5) — voices 1 to 3</li>
+          <li>Vibrato rate (MIDI CC 76) and Vibrato depth (MIDI CC 77) — voices 1 to 3</li>
+          <li>Pulse width (MIDI CC 71) — voices 1 and 2</li>
+        </ul>
+      </div>
+
+      <div class="top-right">
+        <div class="slideshow-container">
+          <img class="slide active" id="slideA">
+          <img class="slide" id="slideB">
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="bottom-section">
+
+    <div class="bottom-left">
+      <h2>Demo</h2>
+        <p>0.mid demonstrates:</p>
+        <ul>
+          <li>Decay (and Release at the end) on voice 1 (the blippety blipp)</li>
+          <li>Pulse width modulation (and Release at the end) on voice 2 (octave bass)</li>
+          <li>Attack, Release, Vibrato depth, Vibrato rate, and Portamento on voice 3 (melody)</li>
+          <li>Decay and Relase on voice 4 (noise drums)</li>
+        </ul>
+        <p>1.mid demonstrates:</p>
+        <ul>
+          <li>Decay, Attack, and Release in different amount on all voices (voice 1 melody, voice 2 slower tones, voice 3 bass, voice 4 noise drums)</li>
+          <li>Pulse width modulation on both voice 1 (higher pitched snappy melody) and voice 2 (lower pitched melody)</li>
+          <li>Portamento on voice 2</li>
+          <li>Vibrato on voice 1</li>
+        </ul>
+        <p>2.mid demonstrates:</p>
+        <ul>
+          <li>Pitch bend and Pitch bend range on voices 1 (with increasing pitch bend range), 2, and 4</li>
+          <li>Decay on voice 3</li>
+          <li>Relase on voices 1, 2, and 4</li>
+        </ul>
+        <p>3.mid demonstrates:</p>
+        <ul>
+          <li>Detune on voice 1 (doubling of the bass line after 4 bars)</li>
+          <li>Decay on voices 1, 2, and 4</li>
+          <li>Relase and Vibrato depth on voice 3 (melody)</li>
+          <li>Release and Sound level on voice 4 (noise hi-hat)</li>
+        </ul>
+
+        <p>10.mid, 11.mid, and 12.mid are... well-known, old, nostalgic game music.</p>
+        
+        <div class="controls">
+          <label for="midiSelect">Choose MIDI file:</label>
+          <select id="midiSelect">
+            <option value="0.mid">0.mid</option>
+            <option value="1.mid">1.mid</option>
+            <option value="2.mid">2.mid</option>
+            <option value="3.mid">3.mid</option>
+            <option value="10.mid">10.mid</option>
+            <option value="11.mid">11.mid</option>
+            <option value="12.mid">12.mid</option>
+          </select>
+
+          <button id="startBtn">Start Audio & Play MIDI</button>
+          <small>(Selecting a new song stops playback)</small>
+        </div>
     </div>
 
-  <h2>MIDI CC Mapping Details</h2>
-    <ul>
-      <li>
-        <strong>CC 5 – Portamento Time Width (Voices 1-3):</strong><br>
-        MIDI value 0 = no portamento<br>
-        MIDI value 127 = long portamento (2 seconds)<br>
-        Linear mapping between these values
-      </li>
+    <div class="bottom-right">
+      <h2>MIDI CC Mapping Details</h2>
+        <ul>
+          <li>
+            <strong>CC 3 – Voice Detune (Voices 1-3):</strong><br>
+            MIDI value 0 = no detune<br>
+            MIDI value 127 = 100 cents (1 semitone)<br>
+            Linear mapping between these values
+          </li>
 
-      <li>
-        <strong>CC 9 – Pitch Bend Range (All voices):</strong><br>
-        MIDI value 0 = 2 semitones<br>
-        MIDI value 127 = 24 semitones (i.e., 2 octaves)<br>
-        Linear mapping between these values
-      </li>
+          <li>
+            <strong>CC 5 – Portamento Time Width (Voices 1-3):</strong><br>
+            MIDI value 0 = no portamento<br>
+            MIDI value 127 = long portamento (2 seconds)<br>
+            Linear mapping between these values
+          </li>
 
-      <li>
-        <strong>CC 71 – Pulse Width (Voices 1 & 2 only):</strong><br>
-        MIDI value 0 = 0.5 (square wave)<br>
-        MIDI value 127 = 0.02 (narrow pulse wave)<br>
-        Linear mapping between these values
-      </li>
+          <li>
+            <strong>CC 7 – Sound Level (All voices):</strong><br>
+            MIDI value 0 = no sound<br>
+            MIDI value 127 = max sound level<br>
+            Linear mapping between these values
+          </li>
 
-      <li>
-        <strong>CC 73 – Attack:</strong><br>
-        MIDI value 0 = instant (0 seconds)<br>
-        MIDI values 1–127 = exponential mapping from 0.01 to 4.0 seconds
-      </li>
+          <li>
+            <strong>CC 9 – Pitch Bend Range (All voices):</strong><br>
+            MIDI value 0 = 2 semitones<br>
+            MIDI value 127 = 24 semitones (i.e., 2 octaves)<br>
+            Linear mapping between these values
+          </li>
 
-      <li>
-        <strong>CC 75 – Decay:</strong><br>
-        MIDI value 0 = no decay (sustain until note off)<br>
-        MIDI values 1–127 = exponential mapping from 0.01 to 4.0 seconds
-      </li>
+          <li>
+            <strong>CC 71 – Pulse Width (Voices 1 & 2 only):</strong><br>
+            MIDI value 0 = 0.5 (square wave)<br>
+            MIDI value 127 = 0.02 (narrow pulse wave)<br>
+            Linear mapping between these values
+          </li>
 
-      <li>
-        <strong>CC 72 – Release:</strong><br>
-        MIDI values 0–127 = exponential mapping from 0.01 to 4.0 seconds
-      </li>
+          <li>
+            <strong>CC 73 – Attack (All voices):</strong><br>
+            MIDI value 0 = instant (0 seconds)<br>
+            MIDI values 1–127 = exponential mapping from 0.01 to 4.0 seconds
+          </li>
 
-      <li>
-        <strong>CC 76 – Vibrato Rate (Voices 1–3):</strong><br>
-        MIDI values 0–127 = linear mapping from 0.1 Hz to 20 Hz
-      </li>
+          <li>
+            <strong>CC 75 – Decay (All voices):</strong><br>
+            MIDI value 0 = no decay (sustain until note off)<br>
+            MIDI values 1–127 = exponential mapping from 0.01 to 4.0 seconds
+          </li>
 
-      <li>
-        <strong>CC 77 – Vibrato Depth (Voices 1–3):</strong><br>
-        MIDI value 0 = 0 cents (no vibrato)<br>
-        MIDI value 127 = 600 cents (±0.5 octave)<br>
-        Linear mapping across the range
-      </li>
-    </ul>
+          <li>
+            <strong>CC 72 – Release (All voices):</strong><br>
+            MIDI values 0–127 = exponential mapping from 0.01 to 4.0 seconds
+          </li>
+
+          <li>
+            <strong>CC 76 – Vibrato Rate (Voices 1–3):</strong><br>
+            MIDI values 0–127 = linear mapping from 0.1 Hz to 20 Hz
+          </li>
+
+          <li>
+            <strong>CC 77 – Vibrato Depth (Voices 1–3):</strong><br>
+            MIDI value 0 = 0 cents (no vibrato)<br>
+            MIDI value 127 = 600 cents (±0.5 octave)<br>
+            Linear mapping across the range
+          </li>
+        </ul>
+    </div>
+
+  </div>
 
 </body>
+
 </html>

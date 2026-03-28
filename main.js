@@ -1,4 +1,4 @@
-import { initiateAudio, handleMidiEvent, resetVoices } from "./synthEngine.js";
+import { initiateAudio, handleMidiEvent, resetVoices, voices, audioCtx } from "./synthEngine.js";
 import { parseMidi } from "./parseMidi.js";
 
 let scheduledEvents = [];
@@ -42,6 +42,11 @@ async function playMidi(fileName) {
   const arrayBuffer = await response.arrayBuffer();
   const midi = parseMidi(arrayBuffer);
 
+  if (!midi.events.length) return;
+
+  // Track when the last event should happen
+  const lastEventTime = Math.max(...midi.events.map(e => e.time));
+
   // Schedule MIDI events
   midi.events.forEach(event => {
     const id = setTimeout(() => handleMidiEvent(event), event.time * 1000);
@@ -53,6 +58,12 @@ async function playMidi(fileName) {
   // Disable play button while playing
   const startBtn = document.getElementById("startBtn");
   if (startBtn) startBtn.disabled = true;
+
+  // Schedule automatic reset when last MIDI event has finished
+  const resetId = setTimeout(() => {
+    stopPlayback();
+  }, lastEventTime * 1000 + 100); // small buffer of 100ms
+  scheduledEvents.push(resetId);
 }
 
 // --------------------------------------
@@ -70,3 +81,47 @@ document.getElementById("startBtn")?.addEventListener("click", async () => {
 document.getElementById("midiSelect")?.addEventListener("change", () => {
   if (isPlaying) stopPlayback();
 });
+
+
+// --------------------------------------
+// Image slider
+// --------------------------------------
+const images = [
+  "images/2a03_0.png",
+  "images/2a03_1.png",
+  "images/2a03_2.png",
+  "images/2a03_3.png"
+];
+
+let current = 0;
+
+const slideA = document.getElementById("slideA");
+const slideB = document.getElementById("slideB");
+
+if (slideA && slideB) {
+  let showingA = true;
+
+  // initial image
+  slideA.src = images[0];
+  slideA.classList.add("active");
+
+  function changeImage() {
+    current = (current + 1) % images.length;
+    const nextImage = images[current];
+
+    if (showingA) {
+      slideB.src = nextImage;
+      slideB.classList.add("active");
+      slideA.classList.remove("active");
+    } else {
+      slideA.src = nextImage;
+      slideA.classList.add("active");
+      slideB.classList.remove("active");
+    }
+
+    showingA = !showingA;
+  }
+
+  // every 30 seconds
+  setInterval(changeImage, 30000);
+}

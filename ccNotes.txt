@@ -3,12 +3,20 @@ MIDI CC messages
 https://midi.org/midi-1-0-control-change-messages
 ===============
 
+Detune tune
+3	00000011	03	Voice Fine Tune	0-127	MSB
+    0 = no detune, 127 = 1 semitone detune
+
 Portamento
 5	00000101	05	Portamento Time	0-127	MSB
     0 = no portamento, 127 = long portamento (2 seconds)
 
+Sound level
+7	00000111	07	Channel Volume	0-127	MSB
+
 Pitch bend range
 9	00001001	09	Pitch Bend Range	0-127	MSB
+    0 = 2 semitones, 127 = 24 semitones
 
 PWM control for Voice 1 and 2
 71	01000111	47	Sound Controller 2 (default: Timbre/Harmonic Intens.)	0-127	LSB
@@ -32,6 +40,11 @@ Vibrato controls
 
 
 Att lägga till:
-Fine tune
-3	00000011	03	Voice Fine Tune	0-127	MSB
-7	00000111	07	Channel Volume (formerly Main Volume)	0-127	MSB
+
+7	00000111	07	Channel Volume	0-127	MSB
+
+
+
+fixa decay måste avbrytas vid note off
+
+skapa en fyrdlesoscilloskop
