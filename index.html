@@ -44,7 +44,7 @@
           <img class="slide active" id="slideA">
           <img class="slide" id="slideB">
         </div>
-        <p class="disclaimer">The web synth engine is inspired by the <a href="https://en.wikipedia.org/wiki/Ricoh_2A03">Ricoh 2A03 (and 2A07)</a>, it is not intended to simulate the exact sound or behavior of these ICs.</p>
+        <p>The web synth engine is inspired by the <a href="https://en.wikipedia.org/wiki/Ricoh_2A03">Ricoh 2A03 (and 2A07)</a>, it is not intended to simulate the exact sound or behavior of these ICs.</p>
       </div>
 
     </div>
@@ -56,41 +56,42 @@
       <h2>Demo</h2>
         <div class="controls">
           <label for="midiSelect">Choose MIDI file:</label>
-          <select id="midiSelect">
-            <option value="midi/0.mid">0.mid</option>
-            <option value="midi/1.mid">1.mid</option>
-            <option value="midi/2.mid">2.mid</option>
-            <option value="midi/3.mid">3.mid</option>
-            <option value="midi/10.mid">10.mid</option>
-            <option value="midi/11.mid">11.mid</option>
-            <option value="midi/12.mid">12.mid</option>
-          </select>
-
-          <button id="startBtn">Start Audio & Play MIDI</button>
+          <div class="dropdown-button">
+            <select id="midiSelect">
+              <option value="midi/0.mid">0.mid</option>
+              <option value="midi/1.mid">1.mid</option>
+              <option value="midi/2.mid">2.mid</option>
+              <option value="midi/3.mid">3.mid</option>
+              <option value="midi/10.mid">10.mid</option>
+              <option value="midi/11.mid">11.mid</option>
+              <option value="midi/12.mid">12.mid</option>
+            </select>
+            <button id="startBtn">Start Audio & Play MIDI</button>
+          </div>
           <small>(Selecting a new song stops playback)</small>
         </div>
 
-        <p>0.mid demonstrates:</p>
+        <p><strong>0.mid</strong> demonstrates:</p>
         <ul>
           <li>Decay (and Release at the end) on voice 1 (the blippety blipp)</li>
           <li>Pulse width modulation (and Release at the end) on voice 2 (octave bass)</li>
           <li>Attack, Release, Vibrato depth, Vibrato rate, and Portamento on voice 3 (melody)</li>
           <li>Decay and Relase on voice 4 (noise drums)</li>
         </ul>
-        <p>1.mid demonstrates:</p>
+        <p><strong>1.mid</strong> demonstrates:</p>
         <ul>
           <li>Decay, Attack, and Release in different amount on all voices (voice 1 melody, voice 2 slower tones, voice 3 bass, voice 4 noise drums)</li>
           <li>Pulse width modulation on both voice 1 (higher pitched snappy melody) and voice 2 (lower pitched melody)</li>
           <li>Portamento on voice 2</li>
           <li>Vibrato on voice 1</li>
         </ul>
-        <p>2.mid demonstrates:</p>
+        <p><strong>2.mid</strong> demonstrates:</p>
         <ul>
           <li>Pitch bend and Pitch bend range on voices 1 (with increasing pitch bend range), 2, and 4</li>
           <li>Decay on voice 3</li>
           <li>Relase on voices 1, 2, and 4</li>
         </ul>
-        <p>3.mid demonstrates:</p>
+        <p><strong>3.mid</strong> demonstrates:</p>
         <ul>
           <li>Detune on voice 1 (doubling of the bass line after 4 bars)</li>
           <li>Decay on voices 1, 2, and 4</li>
