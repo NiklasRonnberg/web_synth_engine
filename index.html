@@ -16,7 +16,7 @@
       <div class="top-left">
 
         <p>This is a game synth engine with four voices, inspired by the sounds of my childhood computers and video games. 
-        I created it to explore the Web Audio API and experiment with its possibilities.
+        I created it to explore the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API">Web Audio API</a> and experiment with its possibilities.
         The voices are:</p>
 
         <ul>
@@ -44,7 +44,7 @@
           <img class="slide active" id="slideA">
           <img class="slide" id="slideB">
         </div>
-        <p>The web synth engine is inspired by the Ricoh 2A03 and 2A07, it is not intended to simulate these sound ICs.</p>
+        <p class="disclaimer">The web synth engine is inspired by the <a href="https://en.wikipedia.org/wiki/Ricoh_2A03">Ricoh 2A03 (and 2A07)</a>, it is not intended to simulate the exact sound or behavior of these ICs.</p>
       </div>
 
     </div>
@@ -54,6 +54,22 @@
 
     <div class="bottom-left">
       <h2>Demo</h2>
+        <div class="controls">
+          <label for="midiSelect">Choose MIDI file:</label>
+          <select id="midiSelect">
+            <option value="midi/0.mid">0.mid</option>
+            <option value="midi/1.mid">1.mid</option>
+            <option value="midi/2.mid">2.mid</option>
+            <option value="midi/3.mid">3.mid</option>
+            <option value="midi/10.mid">10.mid</option>
+            <option value="midi/11.mid">11.mid</option>
+            <option value="midi/12.mid">12.mid</option>
+          </select>
+
+          <button id="startBtn">Start Audio & Play MIDI</button>
+          <small>(Selecting a new song stops playback)</small>
+        </div>
+
         <p>0.mid demonstrates:</p>
         <ul>
           <li>Decay (and Release at the end) on voice 1 (the blippety blipp)</li>
@@ -83,22 +99,6 @@
         </ul>
 
         <p>10.mid, 11.mid, and 12.mid are... well-known, old, nostalgic game music.</p>
-        
-        <div class="controls">
-          <label for="midiSelect">Choose MIDI file:</label>
-          <select id="midiSelect">
-            <option value="midi/0.mid">0.mid</option>
-            <option value="midi/1.mid">1.mid</option>
-            <option value="midi/2.mid">2.mid</option>
-            <option value="midi/3.mid">3.mid</option>
-            <option value="midi/10.mid">10.mid</option>
-            <option value="midi/11.mid">11.mid</option>
-            <option value="midi/12.mid">12.mid</option>
-          </select>
-
-          <button id="startBtn">Start Audio & Play MIDI</button>
-          <small>(Selecting a new song stops playback)</small>
-        </div>
     </div>
 
     <div class="bottom-right">
@@ -108,21 +108,21 @@
             <strong>CC 3 – Voice Detune (Voices 1-3):</strong><br>
             MIDI value 0 = no detune<br>
             MIDI value 127 = 100 cents (1 semitone)<br>
-            Linear mapping between these values
+            Exponential mapping between these values
           </li>
 
           <li>
             <strong>CC 5 – Portamento Time Width (Voices 1-3):</strong><br>
             MIDI value 0 = no portamento<br>
             MIDI value 127 = long portamento (2 seconds)<br>
-            Linear mapping between these values
+            Exponential mapping between these values
           </li>
 
           <li>
             <strong>CC 7 – Sound Level (All voices):</strong><br>
             MIDI value 0 = no sound<br>
             MIDI value 127 = max sound level<br>
-            Linear mapping between these values
+            Exponential mapping between these values
           </li>
 
           <li>
