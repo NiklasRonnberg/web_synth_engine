@@ -35,16 +35,3 @@ Vibrato controls
     0–127 = linear mapping from 0.1 Hz to 20 Hz
 77	01001101	4D	Sound Controller 8 (default: Vibrato Depth – see MMA RP-021)	0-127	LSB
     0 = 0 cents (no vibrato), 127 = 600 cents (±0.5 octave) (linear mapping)
-
-
-
-
-Att lägga till:
-
-7	00000111	07	Channel Volume	0-127	MSB
-
-
-
-fixa decay måste avbrytas vid note off
-
-skapa en fyrdlesoscilloskop
