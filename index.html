@@ -26,17 +26,17 @@
           <li>4 - Noise with adjustable clock/quality (MIDI channel 4)</li>
         </ul>
 
-        <p>All voices respond to MIDI note number, Pitch Bend, Sound level, and the following settings:</p>
-
+        <p>All voices respond to MIDI note number (i.e., pitch) and the following MIDI CC Messages:</p>
         <ul>
-          <li>Attack (MIDI CC 73), Decay (MIDI CC 75), and Release (MIDI CC 72) — all voices</li>
-          <li>Detune (MIDI CC 3) - voices 1 to 3</li>
           <li>Sound level (MIDI CC 7) — all voices</li>
           <li>Pitch bend range (MIDI CC 9) — all voices</li>
+          <li>Attack (MIDI CC 73), Decay (MIDI CC 75), and Release (MIDI CC 72) — all voices</li>
+          <li>Detune (MIDI CC 3) - voices 1 to 3</li>
           <li>Portamento time (MIDI CC 5) — voices 1 to 3</li>
           <li>Vibrato rate (MIDI CC 76) and Vibrato depth (MIDI CC 77) — voices 1 to 3</li>
           <li>Pulse width (MIDI CC 71) — voices 1 and 2</li>
         </ul>
+        <p>The envelope used for all voices is an ADR with Attack time from 0, Decay time to 0, and Release time to 0. Setting Decay to 0 allows Release to function, if Decay is > 0 then there is no Release. </p>
       </div>
 
       <div class="top-right">
@@ -44,6 +44,7 @@
           <img class="slide active" id="slideA">
           <img class="slide" id="slideB">
         </div>
+        <p>The web synth engine is inspired by the Ricoh 2A03 and 2A07, it is not intended to simulate these sound ICs.</p>
       </div>
 
     </div>
@@ -86,13 +87,13 @@
         <div class="controls">
           <label for="midiSelect">Choose MIDI file:</label>
           <select id="midiSelect">
-            <option value="0.mid">0.mid</option>
-            <option value="1.mid">1.mid</option>
-            <option value="2.mid">2.mid</option>
-            <option value="3.mid">3.mid</option>
-            <option value="10.mid">10.mid</option>
-            <option value="11.mid">11.mid</option>
-            <option value="12.mid">12.mid</option>
+            <option value="midi/0.mid">0.mid</option>
+            <option value="midi/1.mid">1.mid</option>
+            <option value="midi/2.mid">2.mid</option>
+            <option value="midi/3.mid">3.mid</option>
+            <option value="midi/10.mid">10.mid</option>
+            <option value="midi/11.mid">11.mid</option>
+            <option value="midi/12.mid">12.mid</option>
           </select>
 
           <button id="startBtn">Start Audio & Play MIDI</button>
